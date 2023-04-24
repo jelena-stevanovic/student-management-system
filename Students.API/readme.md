@@ -1,0 +1,1 @@
+Scaffold-DbContext "Server=localhost\SQLEXPRESS; Database=StudentsDB; Trusted_Connection=True; TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
