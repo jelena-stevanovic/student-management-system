@@ -3,6 +3,9 @@ import StudentIndex from '../components/Student/Index.vue';
 import StudentStatusesIndex from '../components/StudentStatus/Index.vue';
 import StudentCreate from '../components/Student/Create.vue';
 import StudentDetail from '../components/Student/Detail.vue';
+import CourseIndex from '../components/Course/Index.vue';
+import CourseCreate from '../components/Course/Create.vue';
+import CourseDetail from '../components/Course/Detail.vue';
 
 const routes = [
   {
@@ -29,6 +32,26 @@ const routes = [
     path: '/students/:id/edit',
     name: 'EditStudent',
     component: StudentCreate,
+  },
+  {
+    path: '/courses',
+    name: 'default',
+    component: CourseIndex,
+  },
+  {
+    path: '/courses/create',
+    name: 'course_create',
+    component: CourseCreate,
+  },
+  {
+    path: '/courses/:id',
+    name: 'Course',
+    component: CourseDetail,
+  },
+  {
+    path: '/courses/:id/edit',
+    name: 'EditCourse',
+    component: CourseCreate,
   },
 ];
 

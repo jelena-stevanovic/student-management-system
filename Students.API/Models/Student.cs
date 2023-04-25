@@ -18,4 +18,6 @@ public partial class Student
     public string? StudentNumber { get; set; }
 
     public virtual StudentStatus? Status { get; set; }
+
+    public virtual ICollection<StudentCourse> StudentCourses { get; set; } = new List<StudentCourse>();
 }

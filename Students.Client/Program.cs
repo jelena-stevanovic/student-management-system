@@ -7,10 +7,12 @@ using Students.Client.HttpHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IStudentApiService, StudentApiService>();
+builder.Services.AddScoped<ICourseApiService, CourseApiService>();
 
-
+// Client for accessing the Students.API
 builder.Services.AddTransient<AuthenticationDelegatingHandler>();
 
 builder.Services.AddHttpClient("StudentAPIClient", client =>
@@ -20,7 +22,7 @@ builder.Services.AddHttpClient("StudentAPIClient", client =>
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
 
-
+// Client for accessing the IDP
 builder.Services.AddHttpClient("IDPClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7112/");
@@ -29,7 +31,7 @@ builder.Services.AddHttpClient("IDPClient", client =>
 });
 
 builder.Services.AddSingleton(new ClientCredentialsTokenRequest
-{                                                
+{
     Address = "https://localhost:7112/connect/token",
     ClientId = "studentClient",
     ClientSecret = "secret",
@@ -37,10 +39,10 @@ builder.Services.AddSingleton(new ClientCredentialsTokenRequest
 });
 
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-    })
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
@@ -60,11 +62,11 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

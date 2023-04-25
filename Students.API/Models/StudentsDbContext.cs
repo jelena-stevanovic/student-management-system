@@ -15,7 +15,11 @@ public partial class StudentsDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Course> Courses { get; set; }
+
     public virtual DbSet<Student> Students { get; set; }
+
+    public virtual DbSet<StudentCourse> StudentCourses { get; set; }
 
     public virtual DbSet<StudentStatus> StudentStatuses { get; set; }
 
@@ -25,6 +29,18 @@ public partial class StudentsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Course>(entity =>
+        {
+            entity.ToTable("Course");
+
+            entity.Property(e => e.CourseId)
+                .ValueGeneratedNever()
+                .HasColumnName("CourseID");
+            entity.Property(e => e.CourseName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<Student>(entity =>
         {
             entity.HasKey(e => e.StudentId).HasName("PK_Students");
@@ -41,6 +57,27 @@ public partial class StudentsDbContext : DbContext
             entity.HasOne(d => d.Status).WithMany(p => p.Students)
                 .HasForeignKey(d => d.StatusId)
                 .HasConstraintName("FK_Student_StudentStatus");
+        });
+
+        modelBuilder.Entity<StudentCourse>(entity =>
+        {
+            entity.ToTable("StudentCourse");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.CourseId).HasColumnName("CourseID");
+            entity.Property(e => e.StudentId).HasColumnName("StudentID");
+
+            entity.HasOne(d => d.Course).WithMany(p => p.StudentCourses)
+                .HasForeignKey(d => d.CourseId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StudentCourse_Course");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.StudentCourses)
+                .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StudentCourse_Student");
         });
 
         modelBuilder.Entity<StudentStatus>(entity =>
