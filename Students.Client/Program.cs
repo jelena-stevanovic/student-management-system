@@ -70,6 +70,20 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Required for MVC to support SPA 
+app.Use(async (context, next) =>
+{
+    await next();
+    var path = context.Request.Path.Value;
+    if (context.Response.StatusCode == 404 && !Path.HasExtension(path) && !path.StartsWith("/api"))
+    {
+        // This allows index.html to be the main container for the SPA
+        context.Request.Path = "/";
+        await next();
+    }
+});
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

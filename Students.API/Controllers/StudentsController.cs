@@ -38,7 +38,11 @@ namespace Students.API.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students.Include(s => s.Status).FirstOrDefaultAsync(s => s.StudentId == id);
+            var student = await _context.Students
+                .Include(s => s.Status)
+                .Include(s => s.StudentCourses)
+                .ThenInclude(sc => sc.Course)
+                .FirstOrDefaultAsync(s => s.StudentId == id);
 
             if (student == null)
             {

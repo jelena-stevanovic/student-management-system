@@ -15,4 +15,6 @@ public class Student
     public int? StatusId { get; set; }
     
     public StudentStatus? Status { get; set; }
+    public ICollection<StudentCourse>? StudentCourses { get; set; } = new List<StudentCourse>();
+
 }
